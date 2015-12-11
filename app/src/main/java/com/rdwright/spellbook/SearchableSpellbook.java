@@ -1,6 +1,5 @@
 package com.rdwright.spellbook;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -8,22 +7,24 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * Created by WrighRya on 12/10/2015.
  */
-public class SearchableSpellbook extends Activity{
+public class SearchableSpellbook extends ActionBarActivity {
     private final String TAG = "SearchableSpellbook";
     private TextView mTextView;
     private ListView mListView;
@@ -32,6 +33,9 @@ public class SearchableSpellbook extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
 
         mTextView = (TextView) findViewById(R.id.text);
         mListView = (ListView) findViewById(R.id.list);

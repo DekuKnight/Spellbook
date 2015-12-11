@@ -1,31 +1,34 @@
 package com.rdwright.spellbook;
 
-import android.app.Activity;
-import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 /**
  * Created by WrighRya on 12/10/2015.
  */
-public class SpellActivity extends Activity{
+public class SpellActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spell);
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        /*ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);*/
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
 
         Uri uri = getIntent().getData();
         Cursor cursor = managedQuery(uri, null, null, null, null);
