@@ -106,8 +106,7 @@ public class SearchableSpellbook extends ActionBarActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // Build the Intent used to open WordActivity with a specific spell Uri
                     Intent spellIntent = new Intent(getApplicationContext(), SpellActivity.class);
-                    Uri data = Uri.withAppendedPath(SpellbookProvider.CONTENT_URI,
-                            String.valueOf(id));
+                    Uri data = Uri.withAppendedPath(SpellbookProvider.CONTENT_URI, String.valueOf(id));
                     spellIntent.setData(data);
                     startActivity(spellIntent);
                 }
@@ -123,7 +122,7 @@ public class SearchableSpellbook extends ActionBarActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        //searchView.setIconifiedByDefault(false);
+        searchView.setIconifiedByDefault(true);
 
         return true;
     }

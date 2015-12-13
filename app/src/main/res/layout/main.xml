@@ -1,12 +1,26 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/toolbar">
-    </include>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:elevation="4dp">
+
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/toolbar">
+        </include>
+
+        <android.support.design.widget.TabLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <TextView
         android:id="@+id/text"
@@ -23,4 +37,5 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-</LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -24,11 +24,9 @@ public class SpellActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spell);
 
-        /*ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);*/
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Uri uri = getIntent().getData();
         Cursor cursor = managedQuery(uri, null, null, null, null);
@@ -89,7 +87,7 @@ public class SpellActivity extends ActionBarActivity {
         }
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
@@ -97,10 +95,10 @@ public class SpellActivity extends ActionBarActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        //searchView.setIconifiedByDefault(false);
+        searchView.setIconifiedByDefault(true);
 
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

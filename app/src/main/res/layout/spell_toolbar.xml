@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
-    app:theme="@style/AppTheme.Dark"
-    app:popupTheme="@style/AppTheme.SearchView">
+    android:elevation="4dp"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 </android.support.v7.widget.Toolbar>
