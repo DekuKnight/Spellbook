@@ -7,7 +7,7 @@
         android:id="@+id/all_text"
         android:textColor="?android:textColorPrimary"
         android:textSize="17dp"
-        android:text="Tab for all spells"
+        android:text="List of all spells"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

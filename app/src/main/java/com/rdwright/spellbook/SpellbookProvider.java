@@ -18,6 +18,7 @@ public class SpellbookProvider extends ContentProvider{
 
     public static final String PROVIDER = "com.rdwright.spellbook.SpellbookProvider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + PROVIDER + "/spellbook");
+    public static final Uri CONTENT_ALL_URI = Uri.parse("content://" + PROVIDER + "/spellbook/*");
 
     // MIME types used for searching SPELLs or looking up a single definition
     public static final String SPELLS_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +
@@ -32,6 +33,7 @@ public class SpellbookProvider extends ContentProvider{
     private static final int GET_SPELL = 1;
     private static final int SEARCH_SUGGEST = 2;
     private static final int REFRESH_SHORTCUT = 3;
+    private static final int ALL_SPELLS = 4;
     private static final UriMatcher sURIMatcher = buildUriMatcher();
 
     /**
@@ -42,7 +44,8 @@ public class SpellbookProvider extends ContentProvider{
         // to get definitions...
         matcher.addURI(PROVIDER, "spellbook", SEARCH_SPELLS);
         matcher.addURI(PROVIDER, "spellbook/#", GET_SPELL);
-        // to get suggestions...
+        matcher.addURI(PROVIDER, "spellbook/*", ALL_SPELLS);
+       // to get suggestions...
         matcher.addURI(PROVIDER, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
         matcher.addURI(PROVIDER, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
 
@@ -92,6 +95,9 @@ public class SpellbookProvider extends ContentProvider{
                 return getSpell(uri);
             case REFRESH_SHORTCUT:
                 return refreshShortcut(uri);
+            case ALL_SPELLS:
+                Log.d(TAG,"allspells here");
+                return searchAll();
             default:
                 throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
@@ -120,6 +126,15 @@ public class SpellbookProvider extends ContentProvider{
                 SpellDatabase.KEY_DESC};
 
         return mDictionary.getSpellMatches(query, columns);
+    }
+
+    private Cursor searchAll() {
+        String[] columns = new String[] {
+                BaseColumns._ID,
+                SpellDatabase.KEY_SPELL,
+                SpellDatabase.KEY_DESC};
+
+        return mDictionary.getAllSpells(columns);
     }
 
     private Cursor getSpell(Uri uri) {

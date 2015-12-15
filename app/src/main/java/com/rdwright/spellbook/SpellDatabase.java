@@ -129,6 +129,11 @@ public class SpellDatabase {
          */
     }
 
+    //SELECT <columns> FROM <table> WHERE <KEY_SPELL> MATCH '*'
+    public Cursor getAllSpells(String[] columns){
+        return mDatabaseOpenHelper.getReadableDatabase().rawQuery("select docid as _id, " + KEY_SPELL + ", " + KEY_DESC + " from " + FTS_VIRTUAL_TABLE, null);
+    }
+
     /**
      * Performs a database query.
      * @param selection The selection clause
@@ -151,6 +156,7 @@ public class SpellDatabase {
         if (cursor == null) {
             return null;
         } else if (!cursor.moveToFirst()) {
+            Log.d(TAG, "here");
             cursor.close();
             return null;
         }
