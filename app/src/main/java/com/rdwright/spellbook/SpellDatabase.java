@@ -45,9 +45,7 @@ public class SpellDatabase {
     public static final String KEY_PREPARED = "PREPARED";
 
     private static final String SPELL_DATABASE_NAME = "spellbook";
-    private static final String KNOWN_DATABASE_NAME = "known";
     private static final String SPELL_DATABASE_TABLE = "FTSspellbook";
-    private static final String KNOWN_DATABASE_TABLE = "FTSknown";
     private static final int DATABASE_VERSION = 2;
 
     private final SpellbookOpenHelper mDatabaseOpenHelper;

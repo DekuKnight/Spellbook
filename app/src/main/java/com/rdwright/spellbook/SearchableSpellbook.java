@@ -63,7 +63,7 @@ public class SearchableSpellbook extends ActionBarActivity {
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onTabReselected(TabLayout.Tab tab){
             }
         });
 

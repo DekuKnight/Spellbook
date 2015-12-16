@@ -1,23 +1,27 @@
 package com.rdwright.spellbook;
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Outline;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by WrighRya on 12/10/2015.
  */
 public class SpellActivity extends ActionBarActivity {
+    private String TAG = "SpellActivity";
+    private KnownDatabase kd = new KnownDatabase(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +32,16 @@ public class SpellActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         Uri uri = getIntent().getData();
-        Cursor cursor = managedQuery(uri, null, null, null, null);
+        final Cursor cursor = managedQuery(uri, null, null, null, null);
 
         if (cursor == null) {
             finish();
         } else {
             cursor.moveToFirst();
 
-            TextView spell = (TextView) findViewById(R.id.spell);
             TextView definition = (TextView) findViewById(R.id.desc);
-            TextView page = (TextView) findViewById(R.id.page);
             TextView range = (TextView) findViewById(R.id.range);
             TextView comp_mat = (TextView) findViewById(R.id.components_material);
             //TextView ritual = (TextView) findViewById(R.id.ritual);
@@ -48,8 +51,8 @@ public class SpellActivity extends ActionBarActivity {
             TextView school = (TextView) findViewById(R.id.school);
             TextView classes = (TextView) findViewById(R.id.classes);
 
-            int wIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_SPELL);
-            int dIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_DESC);
+            final int wIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_SPELL);
+            final int dIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_DESC);
             int pageIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_PAGE);
             int rIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_RANGE);
             int cIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_COMPONENTS);
@@ -62,10 +65,8 @@ public class SpellActivity extends ActionBarActivity {
             int schoolIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_SCHOOL);
             int classesIndex = cursor.getColumnIndexOrThrow(SpellDatabase.KEY_CLASSES);
 
-
-            spell.setText(cursor.getString(wIndex));
-            definition.setText(cursor.getString(dIndex));
-            page.setText(cursor.getString(pageIndex));
+            getSupportActionBar().setTitle(cursor.getString(wIndex));
+            definition.setText(cursor.getString(dIndex) + "\n\n" + cursor.getString(pageIndex));
             range.setText(cursor.getString(rIndex));
             if(cursor.getString(mIndex).equals("none")){
                 comp_mat.setText(cursor.getString(cIndex));
@@ -84,21 +85,31 @@ public class SpellActivity extends ActionBarActivity {
             school.setText(cursor.getString(schoolIndex));
             classes.setText(cursor.getString(classesIndex));
 
+            final FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
+            addButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addButton.hide();
+                    Toast.makeText(getApplicationContext(), cursor.getString(wIndex) + " added to known spells", Toast.LENGTH_LONG).show();
+
+                    String[] columns = {cursor.getString(wIndex), cursor.getString(dIndex), KnownDatabase.UNPREPARED};
+
+                    //kd.insertKnownSpell(columns);
+
+                }
+            });
+            addButton.setOutlineProvider(new ViewOutlineProvider() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    int diameter = getResources().getDimensionPixelSize(R.dimen.round_button_diameter);
+                    outline.setOval(0, 0, diameter, diameter);
+                }
+            });
+            addButton.setClipToOutline(true);
+
         }
     }
-
-/*    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true);
-
-        return true;
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

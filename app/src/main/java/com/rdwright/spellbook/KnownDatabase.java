@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class KnownDatabase {
     private static final HashMap<String,String> mColumnMap = buildKnownColumnMap();
 
     public KnownDatabase(Context context) {
+
         mDatabaseOpenHelper = new KnownOpenHelper(context);
     }
 
@@ -52,17 +54,25 @@ public class KnownDatabase {
         map.put(KEY_SPELL, KEY_SPELL);
         map.put(KEY_DESC, KEY_DESC);
         map.put(KEY_PREPARED,KEY_PREPARED);
+        map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
         return map;
     }
 
 
     //SELECT <columns> FROM <table> WHERE <KEY_SPELL> MATCH '*'
     public Cursor getAllKnownSpells(){
+        Log.d(TAG, "Getting all known spells...");
         return mDatabaseOpenHelper.getReadableDatabase().rawQuery("select docid as _id, " + KEY_SPELL + ", " + KEY_DESC + " from " + KNOWN_DATABASE_TABLE, null);
+    }
+
+    public void insertKnownSpell(String[] columns){
+        Log.d(TAG, "inserting " + columns[0] + " into known database...");
+        mDatabaseOpenHelper.addKnownSpell(columns);
     }
 
     //SELECT <columns> FROM <table> WHERE <KEY_SPELL> MATCH '*'
     public Cursor getAllPreparedSpells(){
+        Log.d(TAG, "Getting all prepared spells...");
         return mDatabaseOpenHelper.getReadableDatabase().rawQuery("select docid as _id, " + KEY_SPELL + ", " + KEY_DESC + " from " + KNOWN_DATABASE_TABLE + " where " + KEY_PREPARED + "='" + PREPARED + "'", null);
     }
 
@@ -93,24 +103,9 @@ public class KnownDatabase {
         @Override
         public void onCreate(SQLiteDatabase db) {
             Log.d(TAG, "in onCreate");
+            db = getWritableDatabase();
             mDatabase = db;
             mDatabase.execSQL(FTS_KNOWN_CREATE);
-            testPopulate();
-        }
-
-        public void testPopulate(){
-            SpellBean spell = new SpellBean();
-            for(int i = 0; i < 5; i++){
-                spell.setName("Spell " + i);
-                spell.setDesc("Description");
-                if(i%2==0){
-                    spell.setPrepared(PREPARED);
-                }
-                else{
-                    spell.setPrepared(UNPREPARED);
-                }
-                addKnownSpell(spell);
-            }
         }
 
         /**
@@ -118,12 +113,14 @@ public class KnownDatabase {
          * @return rowId or -1 if failed
          */
 
-        public long addKnownSpell(SpellBean spell){
+        public long addKnownSpell(String[] columns){
             ContentValues initialValues = new ContentValues();
-            initialValues.put(KEY_SPELL, spell.getName());
-            initialValues.put(KEY_DESC, spell.getDesc());
-            initialValues.put(KEY_PREPARED, spell.getPrepared());
-
+            initialValues.put(KEY_SPELL, columns[0]);
+            initialValues.put(KEY_DESC, columns[1]);
+            initialValues.put(KEY_PREPARED, columns[2]);
+            if(mDatabase == null){
+                Log.d(TAG, "isnull");
+            }
             return mDatabase.insert(KNOWN_DATABASE_TABLE, null, initialValues);
         }
 

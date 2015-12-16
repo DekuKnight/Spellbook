@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,10 @@ import android.widget.TextView;
  * Created by Ryan on 12/14/2015.
  */
 public class KnownSpellTabFragment extends Fragment {
+    private final String TAG = "KnownSpellTabFragment";
     private TextView mTextView;
     private ListView mListView;
+    private KnownDatabase kd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,7 +30,7 @@ public class KnownSpellTabFragment extends Fragment {
         mListView = (ListView) view.findViewById(R.id.known_list);
         mTextView = (TextView) view.findViewById(R.id.known_text);
 
-        KnownDatabase kd = new KnownDatabase(getContext());
+        kd = new KnownDatabase(getContext());
         Cursor cursor = kd.getAllKnownSpells();
 
         if (cursor == null) {
@@ -59,4 +62,13 @@ public class KnownSpellTabFragment extends Fragment {
         }
         return view;
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d("KnownSpellTabFragment", "Here");
+        View view = getView();
+
+    }
+
 }
