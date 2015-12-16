@@ -41,8 +41,13 @@ public class SpellDatabase {
     public static final String KEY_SCHOOL = "SCHOOL";
     public static final String KEY_CLASSES = "CLASSES";
 
-    private static final String DATABASE_NAME = "spellbook";
-    private static final String FTS_VIRTUAL_TABLE = "FTSspellbook";
+    //Known database columns
+    public static final String KEY_PREPARED = "PREPARED";
+
+    private static final String SPELL_DATABASE_NAME = "spellbook";
+    private static final String KNOWN_DATABASE_NAME = "known";
+    private static final String SPELL_DATABASE_TABLE = "FTSspellbook";
+    private static final String KNOWN_DATABASE_TABLE = "FTSknown";
     private static final int DATABASE_VERSION = 2;
 
     private final SpellbookOpenHelper mDatabaseOpenHelper;
@@ -82,6 +87,7 @@ public class SpellDatabase {
         map.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
         return map;
     }
+
 
     /**
      * Returns a Cursor positioned at the word specified by rowId
@@ -124,14 +130,14 @@ public class SpellDatabase {
          *   for suggestions to carry the proper intent data.
          *   These aliases are defined in the DictionaryProvider when queries are made.
          * - This can be revised to also search the definition text with FTS3 by changing
-         *   the selection clause to use FTS_VIRTUAL_TABLE instead of KEY_SPELL (to search across
+         *   the selection clause to use SPELL_DATABASE_TABLE instead of KEY_SPELL (to search across
          *   the entire table, but sorting the relevance could be difficult.
          */
     }
 
     //SELECT <columns> FROM <table> WHERE <KEY_SPELL> MATCH '*'
     public Cursor getAllSpells(String[] columns){
-        return mDatabaseOpenHelper.getReadableDatabase().rawQuery("select docid as _id, " + KEY_SPELL + ", " + KEY_DESC + " from " + FTS_VIRTUAL_TABLE, null);
+        return mDatabaseOpenHelper.getReadableDatabase().rawQuery("select docid as _id, " + KEY_SPELL + ", " + KEY_DESC + " from " + SPELL_DATABASE_TABLE, null);
     }
 
     /**
@@ -147,7 +153,7 @@ public class SpellDatabase {
          * by which the ContentProvider does not need to know the real column names
          */
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(FTS_VIRTUAL_TABLE);
+        builder.setTables(SPELL_DATABASE_TABLE);
         builder.setProjectionMap(mColumnMap);
 
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
@@ -177,7 +183,7 @@ public class SpellDatabase {
          * identifier, so when making requests, we will use "_id" as an alias for "rowid"
          */
         private static final String FTS_TABLE_CREATE =
-                "CREATE VIRTUAL TABLE " + FTS_VIRTUAL_TABLE +
+                "CREATE VIRTUAL TABLE " + SPELL_DATABASE_TABLE +
                         " USING fts3 (" +
                         KEY_SPELL + ", " +
                         KEY_DESC +", " +
@@ -194,9 +200,9 @@ public class SpellDatabase {
                         KEY_CLASSES + ");";
 
         SpellbookOpenHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            super(context, SPELL_DATABASE_NAME, null, DATABASE_VERSION);
             mHelperContext = context;
-            Log.d(TAG, context.toString() + " " + DATABASE_NAME);
+            Log.d(TAG, context.toString() + " " + SPELL_DATABASE_NAME);
         }
 
         @Override
@@ -283,7 +289,7 @@ public class SpellDatabase {
                 Log.e(TAG, "JSON Parsing error", e);
             }
 
-            return mDatabase.insert(FTS_VIRTUAL_TABLE, null, initialValues);
+            return mDatabase.insert(SPELL_DATABASE_TABLE, null, initialValues);
         }
 
 /*        public long addSpell(String spell, String definition) {
@@ -291,14 +297,14 @@ public class SpellDatabase {
             initialValues.put(KEY_SPELL, spell);
             initialValues.put(KEY_DESC, definition);
 
-            return mDatabase.insert(FTS_VIRTUAL_TABLE, null, initialValues);
+            return mDatabase.insert(SPELL_DATABASE_TABLE, null, initialValues);
         }*/
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + FTS_VIRTUAL_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + SPELL_DATABASE_TABLE);
             onCreate(db);
         }
     }

@@ -30,7 +30,7 @@ public class AllSpellTabFragment extends Fragment {
 
 
         ContentResolver resolver = getContext().getContentResolver();
-        Cursor cursor = resolver.query(SpellbookProvider.CONTENT_ALL_URI, null, null, new String[] {"a"}, null);
+        Cursor cursor = resolver.query(Uri.withAppendedPath(SpellbookProvider.CONTENT_URI,"/*"), null, null, null, null);
 
         // Specify the columns we want to display in the result
         String[] from = new String[] { SpellDatabase.KEY_SPELL,

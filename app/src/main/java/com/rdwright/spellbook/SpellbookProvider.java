@@ -18,7 +18,6 @@ public class SpellbookProvider extends ContentProvider{
 
     public static final String PROVIDER = "com.rdwright.spellbook.SpellbookProvider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + PROVIDER + "/spellbook");
-    public static final Uri CONTENT_ALL_URI = Uri.parse("content://" + PROVIDER + "/spellbook/*");
 
     // MIME types used for searching SPELLs or looking up a single definition
     public static final String SPELLS_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +

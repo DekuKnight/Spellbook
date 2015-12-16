@@ -1,7 +1,5 @@
 package com.rdwright.spellbook;
 
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -24,25 +22,18 @@ public class KnownSpellTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tab_known, container, false);
-    }
+        View view =  inflater.inflate(R.layout.tab_known, container, false);
 
-    public void showResults(String query, Context context) {
+        mListView = (ListView) view.findViewById(R.id.known_list);
+        mTextView = (TextView) view.findViewById(R.id.known_text);
 
-        ContentResolver resolver = context.getContentResolver();
-        Cursor cursor = resolver.query(SpellbookProvider.CONTENT_URI, null, null,
-                new String[] {query}, null);
+        KnownDatabase kd = new KnownDatabase(getContext());
+        Cursor cursor = kd.getAllKnownSpells();
 
         if (cursor == null) {
             // There are no results
-            mTextView.setText(getString(R.string.no_results, new Object[] {query}));
+            mTextView.setText("No known spells. Try adding some from search or from the list.");
         } else {
-            // Display the number of results
-            int count = cursor.getCount();
-            String countString = getResources().getQuantityString(R.plurals.search_results,
-                    count, new Object[] {count, query});
-            mTextView.setText(countString);
-
             // Specify the columns we want to display in the result
             String[] from = new String[] { SpellDatabase.KEY_SPELL,
                     SpellDatabase.KEY_DESC };
@@ -52,7 +43,7 @@ public class KnownSpellTabFragment extends Fragment {
                     R.id.definition };
 
             // Create a simple cursor adapter for the definitions and apply them to the ListView
-            SimpleCursorAdapter spells = new SimpleCursorAdapter(context, R.layout.result, cursor, from, to);
+            SimpleCursorAdapter spells = new SimpleCursorAdapter(getContext(), R.layout.result, cursor, from, to);
             mListView.setAdapter(spells);
 
             // Define the on-click listener for the list items
@@ -66,5 +57,6 @@ public class KnownSpellTabFragment extends Fragment {
                 }
             });
         }
+        return view;
     }
 }

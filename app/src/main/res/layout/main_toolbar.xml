@@ -4,11 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:elevation="4dp">
+        android:layout_width="match_parent">
 
         <include
             android:id="@+id/tool_bar"
@@ -21,7 +19,7 @@
             app:tabSelectedTextColor="@color/colorAccent"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            app:layout_scrollFlags="scroll|enterAlways"/>
 
     </android.support.design.widget.AppBarLayout>
 
